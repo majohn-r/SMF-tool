@@ -2,6 +2,7 @@ package main
 
 import (
 	"os"
+	"smf-tool/internal/commands"
 	"strconv"
 
 	tools "github.com/majohn-r/cmd-toolkit"
@@ -24,6 +25,7 @@ var (
 )
 
 func main() {
+	commands.Load()
 	exitCode := 1
 	if beginningYear, err := strconv.Atoi(firstYear); err != nil {
 		bus.WriteCanonicalError("The value of firstYear %q is not valid: %v\n", firstYear, err)

@@ -1,6 +1,6 @@
 module smf-tool
 
-go 1.19
+go 1.20
 
 require (
 	github.com/lestrrat-go/strftime v1.0.6 // indirect
@@ -14,4 +14,5 @@ require (
 require (
 	github.com/majohn-r/cmd-toolkit v0.1.0
 	github.com/majohn-r/output v0.1.2
+	gitlab.com/gomidi/midi/v2 v2.0.25
 )
