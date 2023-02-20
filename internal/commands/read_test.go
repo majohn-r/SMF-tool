@@ -272,7 +272,8 @@ func Test_read_Exec(t *testing.T) {
 
 func Test_read_asNote(t *testing.T) {
 	type args struct {
-		raw uint8
+		channel uint8
+		raw     uint8
 	}
 	tests := map[string]struct {
 		r *read
@@ -305,10 +306,60 @@ func Test_read_asNote(t *testing.T) {
 		"minor key 9":  {r: &read{key: &smf.Key{Key: 9, IsFlat: true}}, args: args{raw: 9}, want: "A0"},
 		"minor key 10": {r: &read{key: &smf.Key{Key: 9, IsFlat: true}}, args: args{raw: 10}, want: "B♭0"},
 		"minor key 11": {r: &read{key: &smf.Key{Key: 9, IsFlat: true}}, args: args{raw: 11}, want: "B0"},
+		// percussion
+		"unknown 34":         {r: &read{key: &smf.Key{IsMajor: true}}, args: args{channel: 9, raw: 34}, want: "unknown percussion 34"},
+		"ACOUSTIC_BASS_DRUM": {r: &read{key: &smf.Key{IsMajor: true}}, args: args{channel: 9, raw: 35}, want: "ACOUSTIC_BASS_DRUM"},
+		"BASS_DRUM":          {r: &read{key: &smf.Key{IsMajor: true}}, args: args{channel: 9, raw: 36}, want: "BASS_DRUM"},
+		"SIDE_STICK":         {r: &read{key: &smf.Key{IsMajor: true}}, args: args{channel: 9, raw: 37}, want: "SIDE_STICK"},
+		"ACOUSTIC_SNARE":     {r: &read{key: &smf.Key{IsMajor: true}}, args: args{channel: 9, raw: 38}, want: "ACOUSTIC_SNARE"},
+		"HAND_CLAP":          {r: &read{key: &smf.Key{IsMajor: true}}, args: args{channel: 9, raw: 39}, want: "HAND_CLAP"},
+		"ELECTRIC_SNARE":     {r: &read{key: &smf.Key{IsMajor: true}}, args: args{channel: 9, raw: 40}, want: "ELECTRIC_SNARE"},
+		"LO_FLOOR_TOM":       {r: &read{key: &smf.Key{IsMajor: true}}, args: args{channel: 9, raw: 41}, want: "LO_FLOOR_TOM"},
+		"CLOSED_HI_HAT":      {r: &read{key: &smf.Key{IsMajor: true}}, args: args{channel: 9, raw: 42}, want: "CLOSED_HI_HAT"},
+		"HIGH_FLOOR_TOM":     {r: &read{key: &smf.Key{IsMajor: true}}, args: args{channel: 9, raw: 43}, want: "HIGH_FLOOR_TOM"},
+		"PEDAL_HI_HAT":       {r: &read{key: &smf.Key{IsMajor: true}}, args: args{channel: 9, raw: 44}, want: "PEDAL_HI_HAT"},
+		"LO_TOM":             {r: &read{key: &smf.Key{IsMajor: true}}, args: args{channel: 9, raw: 45}, want: "LO_TOM"},
+		"OPEN_HI_HAT":        {r: &read{key: &smf.Key{IsMajor: true}}, args: args{channel: 9, raw: 46}, want: "OPEN_HI_HAT"},
+		"LO_MID_TOM":         {r: &read{key: &smf.Key{IsMajor: true}}, args: args{channel: 9, raw: 47}, want: "LO_MID_TOM"},
+		"HI_MID_TOM":         {r: &read{key: &smf.Key{IsMajor: true}}, args: args{channel: 9, raw: 48}, want: "HI_MID_TOM"},
+		"CRASH_CYMBAL_1":     {r: &read{key: &smf.Key{IsMajor: true}}, args: args{channel: 9, raw: 49}, want: "CRASH_CYMBAL_1"},
+		"HI_TOM":             {r: &read{key: &smf.Key{IsMajor: true}}, args: args{channel: 9, raw: 50}, want: "HI_TOM"},
+		"RIDE_CYMBAL_1":      {r: &read{key: &smf.Key{IsMajor: true}}, args: args{channel: 9, raw: 51}, want: "RIDE_CYMBAL_1"},
+		"CHINESE_CYMBAL":     {r: &read{key: &smf.Key{IsMajor: true}}, args: args{channel: 9, raw: 52}, want: "CHINESE_CYMBAL"},
+		"RIDE_BELL":          {r: &read{key: &smf.Key{IsMajor: true}}, args: args{channel: 9, raw: 53}, want: "RIDE_BELL"},
+		"TAMBOURINE":         {r: &read{key: &smf.Key{IsMajor: true}}, args: args{channel: 9, raw: 54}, want: "TAMBOURINE"},
+		"SPLASH_CYMBAL":      {r: &read{key: &smf.Key{IsMajor: true}}, args: args{channel: 9, raw: 55}, want: "SPLASH_CYMBAL"},
+		"COWBELL":            {r: &read{key: &smf.Key{IsMajor: true}}, args: args{channel: 9, raw: 56}, want: "COWBELL"},
+		"CRASH_CYMBAL_2":     {r: &read{key: &smf.Key{IsMajor: true}}, args: args{channel: 9, raw: 57}, want: "CRASH_CYMBAL_2"},
+		"VIBRASLAP":          {r: &read{key: &smf.Key{IsMajor: true}}, args: args{channel: 9, raw: 58}, want: "VIBRASLAP"},
+		"RIDE_CYMBAL_2":      {r: &read{key: &smf.Key{IsMajor: true}}, args: args{channel: 9, raw: 59}, want: "RIDE_CYMBAL_2"},
+		"HI_BONGO":           {r: &read{key: &smf.Key{IsMajor: true}}, args: args{channel: 9, raw: 60}, want: "HI_BONGO"},
+		"LO_BONGO":           {r: &read{key: &smf.Key{IsMajor: true}}, args: args{channel: 9, raw: 61}, want: "LO_BONGO"},
+		"MUTE_HI_CONGA":      {r: &read{key: &smf.Key{IsMajor: true}}, args: args{channel: 9, raw: 62}, want: "MUTE_HI_CONGA"},
+		"OPEN_HI_CONGA":      {r: &read{key: &smf.Key{IsMajor: true}}, args: args{channel: 9, raw: 63}, want: "OPEN_HI_CONGA"},
+		"LO_CONGA":           {r: &read{key: &smf.Key{IsMajor: true}}, args: args{channel: 9, raw: 64}, want: "LO_CONGA"},
+		"HI_TIMBALE":         {r: &read{key: &smf.Key{IsMajor: true}}, args: args{channel: 9, raw: 65}, want: "HI_TIMBALE"},
+		"LO_TIMBALE":         {r: &read{key: &smf.Key{IsMajor: true}}, args: args{channel: 9, raw: 66}, want: "LO_TIMBALE"},
+		"HI_AGOGO":           {r: &read{key: &smf.Key{IsMajor: true}}, args: args{channel: 9, raw: 67}, want: "HI_AGOGO"},
+		"LO_AGOGO":           {r: &read{key: &smf.Key{IsMajor: true}}, args: args{channel: 9, raw: 68}, want: "LO_AGOGO"},
+		"CABASA":             {r: &read{key: &smf.Key{IsMajor: true}}, args: args{channel: 9, raw: 69}, want: "CABASA"},
+		"MARACAS":            {r: &read{key: &smf.Key{IsMajor: true}}, args: args{channel: 9, raw: 70}, want: "MARACAS"},
+		"SHORT_WHISTLE":      {r: &read{key: &smf.Key{IsMajor: true}}, args: args{channel: 9, raw: 71}, want: "SHORT_WHISTLE"},
+		"LONG_WHISTLE":       {r: &read{key: &smf.Key{IsMajor: true}}, args: args{channel: 9, raw: 72}, want: "LONG_WHISTLE"},
+		"SHORT_GUIRO":        {r: &read{key: &smf.Key{IsMajor: true}}, args: args{channel: 9, raw: 73}, want: "SHORT_GUIRO"},
+		"LONG_GUIRO":         {r: &read{key: &smf.Key{IsMajor: true}}, args: args{channel: 9, raw: 74}, want: "LONG_GUIRO"},
+		"CLAVES":             {r: &read{key: &smf.Key{IsMajor: true}}, args: args{channel: 9, raw: 75}, want: "CLAVES"},
+		"HI_WOOD_BLOCK":      {r: &read{key: &smf.Key{IsMajor: true}}, args: args{channel: 9, raw: 76}, want: "HI_WOOD_BLOCK"},
+		"LO_WOOD_BLOCK":      {r: &read{key: &smf.Key{IsMajor: true}}, args: args{channel: 9, raw: 77}, want: "LO_WOOD_BLOCK"},
+		"MUTE_CUICA":         {r: &read{key: &smf.Key{IsMajor: true}}, args: args{channel: 9, raw: 78}, want: "MUTE_CUICA"},
+		"OPEN_CUICA":         {r: &read{key: &smf.Key{IsMajor: true}}, args: args{channel: 9, raw: 79}, want: "OPEN_CUICA"},
+		"MUTE_TRIANGLE":      {r: &read{key: &smf.Key{IsMajor: true}}, args: args{channel: 9, raw: 80}, want: "MUTE_TRIANGLE"},
+		"OPEN_TRIANGLE":      {r: &read{key: &smf.Key{IsMajor: true}}, args: args{channel: 9, raw: 81}, want: "OPEN_TRIANGLE"},
+		"unknown 82":         {r: &read{key: &smf.Key{IsMajor: true}}, args: args{channel: 9, raw: 82}, want: "unknown percussion 82"},
 	}
 	for name, tt := range tests {
 		t.Run(name, func(t *testing.T) {
-			if got := tt.r.asNote(tt.args.raw); got != tt.want {
+			if got := tt.r.asNote(tt.args.channel, tt.args.raw); got != tt.want {
 				t.Errorf("read.asNote() = %v, want %v", got, tt.want)
 			}
 		})

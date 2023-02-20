@@ -47,6 +47,55 @@ var (
 		10: "B♭",
 		11: "B",
 	}
+	pNotes = map[uint8]string{
+		35: "ACOUSTIC_BASS_DRUM",
+		36: "BASS_DRUM",
+		37: "SIDE_STICK",
+		38: "ACOUSTIC_SNARE",
+		39: "HAND_CLAP",
+		40: "ELECTRIC_SNARE",
+		41: "LO_FLOOR_TOM",
+		42: "CLOSED_HI_HAT",
+		43: "HIGH_FLOOR_TOM",
+		44: "PEDAL_HI_HAT",
+		45: "LO_TOM",
+		46: "OPEN_HI_HAT",
+		47: "LO_MID_TOM",
+		48: "HI_MID_TOM",
+		49: "CRASH_CYMBAL_1",
+		50: "HI_TOM",
+		51: "RIDE_CYMBAL_1",
+		52: "CHINESE_CYMBAL",
+		53: "RIDE_BELL",
+		54: "TAMBOURINE",
+		55: "SPLASH_CYMBAL",
+		56: "COWBELL",
+		57: "CRASH_CYMBAL_2",
+		58: "VIBRASLAP",
+		59: "RIDE_CYMBAL_2",
+		60: "HI_BONGO",
+		61: "LO_BONGO",
+		62: "MUTE_HI_CONGA",
+		63: "OPEN_HI_CONGA",
+		64: "LO_CONGA",
+		65: "HI_TIMBALE",
+		66: "LO_TIMBALE",
+		67: "HI_AGOGO",
+		68: "LO_AGOGO",
+		69: "CABASA",
+		70: "MARACAS",
+		71: "SHORT_WHISTLE",
+		72: "LONG_WHISTLE",
+		73: "SHORT_GUIRO",
+		74: "LONG_GUIRO",
+		75: "CLAVES",
+		76: "HI_WOOD_BLOCK",
+		77: "LO_WOOD_BLOCK",
+		78: "MUTE_CUICA",
+		79: "OPEN_CUICA",
+		80: "MUTE_TRIANGLE",
+		81: "OPEN_TRIANGLE",
+	}
 	percussion = map[uint8]string{
 		0x22: "Acoustic bass drum",
 		0x23: "Bass drum 1",
@@ -259,12 +308,20 @@ func (r *read) Exec(o output.Bus, args []string) (ok bool) {
 	return
 }
 
-func (r *read) asNote(raw uint8) string {
-	noteMap := minorKeys
-	if r.key.IsMajor {
-		noteMap = majorKeys
+func (r *read) asNote(channel, raw uint8) string {
+	if channel == 9 {
+		if s, ok := pNotes[raw]; ok {
+			return s
+		} else {
+			return fmt.Sprintf("unknown percussion %d", raw)
+		}
+	} else {
+		noteMap := minorKeys
+		if r.key.IsMajor {
+			noteMap = majorKeys
+		}
+		return fmt.Sprintf("%s%d", noteMap[raw%12], raw/12)
 	}
-	return fmt.Sprintf("%s%d", noteMap[raw%12], raw/12)
 }
 
 func (r *read) asVolume(velocity uint8) string {
@@ -452,13 +509,13 @@ func (r *read) interpretMetaTrackNameMsg(o output.Bus, message smf.Message) {
 func (r *read) interpretNoteOffMsg(o output.Bus, message smf.Message) {
 	var channel, key, velocity uint8
 	_ = message.GetNoteOff(&channel, &key, &velocity)
-	o.WriteConsole("NoteOff channel %d note %q volume %s\n", channel, r.asNote(key), r.asVolume(velocity))
+	o.WriteConsole("NoteOff channel %d note %q volume %s\n", channel, r.asNote(channel, key), r.asVolume(velocity))
 }
 
 func (r *read) interpretNoteOnMsg(o output.Bus, message smf.Message) {
 	var channel, key, velocity uint8
 	_ = message.GetNoteOn(&channel, &key, &velocity)
-	o.WriteConsole("NoteOn channel %d note %q volume %s\n", channel, r.asNote(key), r.asVolume(velocity))
+	o.WriteConsole("NoteOn channel %d note %q volume %s\n", channel, r.asNote(channel, key), r.asVolume(velocity))
 }
 
 func (r *read) interpretPitchBendMsg(o output.Bus, message smf.Message) {
@@ -472,7 +529,7 @@ func (r *read) interpretPitchBendMsg(o output.Bus, message smf.Message) {
 func (r *read) interpretPolyAfterTouchMsg(o output.Bus, message smf.Message) {
 	var channel, key, pressure uint8
 	_ = message.GetPolyAfterTouch(&channel, &key, &pressure)
-	o.WriteConsole("PolyAfterTouch channel %d note %s pressure %d\n", channel, r.asNote(key), pressure)
+	o.WriteConsole("PolyAfterTouch channel %d note %s pressure %d\n", channel, r.asNote(channel, key), pressure)
 }
 
 func (r *read) asInstrument(channel, program uint8) string {
