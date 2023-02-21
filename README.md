@@ -80,7 +80,7 @@ BPM values (from JFugue/Staccato)
 * ALLEGRO 120
 * VIVACE 145
 * PRESTO 180
-* PRETISSIMO 220
+* PRESTISSIMO 220
 
 Predefined instruments (program change message: these are program values)
 
@@ -228,3 +228,18 @@ Predefined instruments (program change message: these are program values)
   * 125 HELICOPTER
   * 126 APPLAUSE
   * 127 GUNSHOT
+
+Tokens
+
+* In = Instrument; n is any known instrument
+* Kkey = Key; key is a number (0-7) followed by 'b' or '#' (or ♭ or ♯), or a scale name (CbMaj/AbMin, GbMaj/EbMin, DbMaj/BbMin, AbMaj/FMin, EbMaj/CMin, BbMaj/GMin, FMaj/DMin, CMaj/AMin, GMaj/EMin, DMaj/BMin, AMaj/F#Min, EMaj/C#Min, BMaj/G#Min, F#Maj/D#Min, C#Maj/A#Min)
+* Ln = Layer (percussion layer); n is any non-negative decimal value
+* Mn = Measure, n is measure number
+* Pn = Page, n is page number, or "+" to indicate next page
+* TD=n Tempo; D is any standard note duration (w, h, q, ...) and n is number of those notes per minute
+* TSn = Time signature in fractional form (n = 3/4, for example) or C or CUT (or CUT symbol)
+* Tn = Tempo; n is any non-negative value (indicates quarter notes per minute) or any known tempo names (GRAVE, LARGO, LARGHETTO, LENTO, ADAGIO, ADAGIETTO, ANDANTE, ADANTINO, MODERATO, ALLEGRETTO 110, ALLEGRO, VIVACE, PRESTO, PRESTISSIMO)
+* Vn = Voice (track/channel); n in range 0..15 or "percussion" (e.g. V0 V1 .. V15 Vpercussion)
+* Notes
+* | = measure marker
+* [n] special instructions, where n can be a dynamic volume (ppp .. fff), "a niente", "a tempo". "accelerando (accel.)", ">", etcetera
