@@ -19,6 +19,3 @@
 
 # but do not ignore build/version.txt
 !build/version.txt
-
-# IDE specific folders
-.vscode/
