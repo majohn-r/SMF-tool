@@ -1,21 +1,11 @@
 package commands
 
 import (
-	"flag"
 	"fmt"
 
-	tools "github.com/majohn-r/cmd-toolkit"
 	"github.com/majohn-r/output"
 	"gitlab.com/gomidi/midi/v2"
 	"gitlab.com/gomidi/midi/v2/smf"
-)
-
-func init() {
-	tools.AddCommandData(readCommandName, &tools.CommandDescription{IsDefault: IsDefault(readCommandName), Initializer: newRead})
-}
-
-const (
-	readCommandName = "read"
 )
 
 var (
@@ -279,33 +269,6 @@ var (
 
 type read struct {
 	key *smf.Key
-}
-
-func newRead(o output.Bus, c *tools.Configuration, flags *flag.FlagSet) (tools.CommandProcessor, bool) {
-	return newReadCommand(o, c, flags)
-}
-
-func newReadCommand(o output.Bus, c *tools.Configuration, flags *flag.FlagSet) (tools.CommandProcessor, bool) {
-	return &read{key: &smf.Key{Key: 0, Num: 0, IsMajor: true, IsFlat: false}}, true
-}
-
-func (r *read) Exec(o output.Bus, args []string) (ok bool) {
-	if len(args) == 0 {
-		tools.ReportNothingToDo(o, readCommandName, nil)
-	} else {
-		ok = true // optimistic!
-		for _, arg := range args {
-			if data, err := smf.ReadFile(arg); err != nil {
-				o.WriteCanonicalError("An error occurred while reading %q: %v", arg, err)
-				ok = false
-			} else {
-				o.WriteConsole("File: %q\n", arg)
-				r.interpretSMFFile(o, data)
-				o.WriteConsole("EOF %q\n", arg)
-			}
-		}
-	}
-	return
 }
 
 func (r *read) asNote(channel, raw uint8) string {

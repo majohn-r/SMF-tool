@@ -3,88 +3,12 @@ package commands
 import (
 	"bytes"
 	"encoding/binary"
-	"flag"
-	"os"
-	"path/filepath"
 	"reflect"
 	"testing"
 
-	tools "github.com/majohn-r/cmd-toolkit"
 	"github.com/majohn-r/output"
 	"gitlab.com/gomidi/midi/v2/smf"
 )
-
-func Test_newRead(t *testing.T) {
-	type args struct {
-		c     *tools.Configuration
-		flags *flag.FlagSet
-	}
-	tests := map[string]struct {
-		args
-		want  tools.CommandProcessor
-		want1 bool
-		output.WantedRecording
-	}{
-		"basic": {
-			args:  args{c: tools.EmptyConfiguration(), flags: flag.NewFlagSet("read", flag.ContinueOnError)},
-			want:  &read{key: &smf.Key{IsMajor: true}},
-			want1: true,
-		},
-	}
-	for name, tt := range tests {
-		t.Run(name, func(t *testing.T) {
-			o := output.NewRecorder()
-			got, got1 := newRead(o, tt.args.c, tt.args.flags)
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("newRead() got = %v, want %v", got, tt.want)
-			}
-			if got1 != tt.want1 {
-				t.Errorf("newRead() got1 = %v, want %v", got1, tt.want1)
-			}
-			if issues, ok := o.Verify(tt.WantedRecording); !ok {
-				for _, issue := range issues {
-					t.Errorf("newRead() %s", issue)
-				}
-			}
-		})
-	}
-}
-
-func Test_newReadCommand(t *testing.T) {
-	type args struct {
-		c     *tools.Configuration
-		flags *flag.FlagSet
-	}
-	tests := map[string]struct {
-		args
-		want  tools.CommandProcessor
-		want1 bool
-		output.WantedRecording
-	}{
-		"basic": {
-			args:  args{c: tools.EmptyConfiguration(), flags: flag.NewFlagSet("read", flag.ContinueOnError)},
-			want:  &read{key: &smf.Key{IsMajor: true}},
-			want1: true,
-		},
-	}
-	for name, tt := range tests {
-		t.Run(name, func(t *testing.T) {
-			o := output.NewRecorder()
-			got, got1 := newReadCommand(o, tt.args.c, tt.args.flags)
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("newReadCommand() got = %v, want %v", got, tt.want)
-			}
-			if got1 != tt.want1 {
-				t.Errorf("newReadCommand() got1 = %v, want %v", got1, tt.want1)
-			}
-			if issues, ok := o.Verify(tt.WantedRecording); !ok {
-				for _, issue := range issues {
-					t.Errorf("newReadCommand() %s", issue)
-				}
-			}
-		})
-	}
-}
 
 type trackData struct {
 	data []byte
@@ -181,93 +105,6 @@ func makeTrivialContent() []byte {
 		tracks = append(tracks, makeMIDITrack([]eventData{trackContent}))
 	}
 	return makeMIDIFileContent(header, tracks)
-}
-
-func Test_read_Exec(t *testing.T) {
-	type args struct {
-		args []string
-	}
-	tests := map[string]struct {
-		r        *read
-		preTest  func()
-		postTest func()
-		args
-		wantOk bool
-		output.WantedRecording
-	}{
-		"no args": {
-			r:        &read{key: &smf.Key{IsMajor: true}},
-			preTest:  func() {},
-			postTest: func() {},
-			wantOk:   false,
-			WantedRecording: output.WantedRecording{
-				Error: "You disabled all functionality for the command \"read\".\n",
-				Log:   "level='error'  msg='the user disabled all functionality'\n",
-			},
-		},
-		"bad arg": {
-			r: &read{key: &smf.Key{IsMajor: true}},
-			preTest: func() {
-				_ = tools.Mkdir("badArgs")
-				_ = tools.CreateFile(filepath.Join("badArgs", "file.mid"), []byte{})
-			},
-			postTest: func() {
-				_ = os.RemoveAll("badArgs")
-			},
-			args:            args{args: []string{filepath.Join("badArgs", "file.mid")}},
-			wantOk:          false,
-			WantedRecording: output.WantedRecording{Error: "An error occurred while reading \"badArgs\\\\file.mid\": EOF.\n"},
-		},
-		"good arg": {
-			r: &read{key: &smf.Key{IsMajor: true}},
-			preTest: func() {
-				_ = tools.Mkdir("goodArgs")
-				_ = tools.CreateFile(filepath.Join("goodArgs", "file.mid"), makeTrivialContent())
-			},
-			postTest: func() {
-				_ = os.RemoveAll("goodArgs")
-			},
-			args:   args{args: []string{filepath.Join("goodArgs", "file.mid")}},
-			wantOk: true,
-			WantedRecording: output.WantedRecording{Console: "" +
-				"File: \"goodArgs\\\\file.mid\"\n" +
-				"Quarter note: 120 ticks\n" +
-				"16 tracks\n" +
-				"Track 0 is empty\n" +
-				"Track 1 is empty\n" +
-				"Track 2 is empty\n" +
-				"Track 3 is empty\n" +
-				"Track 4 is empty\n" +
-				"Track 5 is empty\n" +
-				"Track 6 is empty\n" +
-				"Track 7 is empty\n" +
-				"Track 8 is empty\n" +
-				"Track 9 is empty\n" +
-				"Track 10 is empty\n" +
-				"Track 11 is empty\n" +
-				"Track 12 is empty\n" +
-				"Track 13 is empty\n" +
-				"Track 14 is empty\n" +
-				"Track 15 is empty\n" +
-				"EOF \"goodArgs\\\\file.mid\"\n",
-			},
-		},
-	}
-	for name, tt := range tests {
-		t.Run(name, func(t *testing.T) {
-			tt.preTest()
-			defer tt.postTest()
-			o := output.NewRecorder()
-			if gotOk := tt.r.Exec(o, tt.args.args); gotOk != tt.wantOk {
-				t.Errorf("read.Exec() = %v, want %v", gotOk, tt.wantOk)
-			}
-			if issues, ok := o.Verify(tt.WantedRecording); !ok {
-				for _, issue := range issues {
-					t.Errorf("read.Exec() %s", issue)
-				}
-			}
-		})
-	}
 }
 
 func Test_read_asNote(t *testing.T) {
@@ -405,7 +242,7 @@ func Test_read_asVolume(t *testing.T) {
 func makeAfterTouchMessage(channel, pressure int) smf.Message {
 	ch := byte(channel & 0x0F)
 	p := byte(pressure & 0x07F)
-	return smf.Message([]byte{0xD0 + ch, p})
+	return []byte{0xD0 + ch, p}
 }
 
 func Test_read_interpretAfterTouchMsg(t *testing.T) {
@@ -445,7 +282,7 @@ func makeControlChangeMsg(channel, controller, value int) smf.Message {
 	ch := byte(channel & 0x0F)
 	ctrl := byte(controller & 0x7F)
 	val := byte(value & 0x7F)
-	return smf.Message([]byte{0xB0 + ch, ctrl, val})
+	return []byte{0xB0 + ch, ctrl, val}
 }
 
 func Test_read_interpretControlChangeMsg(t *testing.T) {
@@ -482,7 +319,7 @@ func Test_read_interpretControlChangeMsg(t *testing.T) {
 }
 
 func makeMetaChannelMsg(channel int) smf.Message {
-	return smf.Message([]byte{0xFF, 0x20, 0x01, byte(channel & 0x0F)})
+	return []byte{0xFF, 0x20, 0x01, byte(channel & 0x0F)}
 }
 
 func Test_read_interpretMetaChannelMsg(t *testing.T) {
@@ -522,7 +359,7 @@ func makeGenericMetaTextMessage(messageType int, message string) smf.Message {
 	msg := []byte{0x0FF, byte(messageType & 0xFF)}
 	msg = append(msg, VlqEncode(uint32(len(payload)))...)
 	msg = append(msg, payload...)
-	return smf.Message(msg)
+	return msg
 }
 
 func Test_read_interpretMetaCopyrightMsg(t *testing.T) {
@@ -739,7 +576,7 @@ func makeMetaKeySigMsg(sharps int, major bool) smf.Message {
 	} else {
 		content = append(content, 1)
 	}
-	return smf.Message(content)
+	return content
 }
 
 func Test_read_interpretMetaKeySigMsg(t *testing.T) {
@@ -930,7 +767,7 @@ func Test_read_interpretMetaMarkerMsg(t *testing.T) {
 }
 
 func makeMetaPortMessage(port uint8) smf.Message {
-	return smf.Message([]byte{0xff, 33, 1, port})
+	return []byte{0xff, 33, 1, port}
 }
 
 func Test_read_interpretMetaPortMsg(t *testing.T) {
@@ -1025,7 +862,7 @@ func makeMetaSMPTEOffsetMessage(frameRate, hour, minute, second, frame, subframe
 	if subframe > 99 {
 		subframe = 99
 	}
-	return smf.Message([]byte{0xFF, 0x54, 5, frameForm | hour, minute, second, frame, subframe})
+	return []byte{0xFF, 0x54, 5, frameForm | hour, minute, second, frame, subframe}
 }
 
 func Test_read_interpretMetaSMPTEOffsetMsg(t *testing.T) {
@@ -1060,7 +897,7 @@ func makeMetaSeqDataMessage(message []byte) smf.Message {
 	content := []byte{0xFF, 0x7F}
 	content = append(content, VlqEncode(uint32(len(message)))...)
 	content = append(content, message...)
-	return smf.Message(content)
+	return content
 }
 
 func Test_read_interpretMetaSeqDataMsg(t *testing.T) {
@@ -1094,7 +931,7 @@ func Test_read_interpretMetaSeqDataMsg(t *testing.T) {
 func makeMetaSeqNumberMessage(val uint16) smf.Message {
 	content := []byte{0xFF, 0, 2}
 	content = append(content, encode16(val)...)
-	return smf.Message(content)
+	return content
 }
 
 func Test_read_interpretMetaSeqNumberMsg(t *testing.T) {
@@ -1129,7 +966,7 @@ func makeMetaTempoMessage(value uint32) smf.Message {
 	encoded := encode32(value)
 	content := []byte{0xFF, 0x51, 3}
 	content = append(content, encoded[1:]...)
-	return smf.Message(content)
+	return content
 }
 
 func Test_read_interpretMetaTempoMsg(t *testing.T) {
@@ -1193,7 +1030,7 @@ func Test_read_interpretMetaTextMsg(t *testing.T) {
 }
 
 func makeMetaTimeSignatureMessage(numerator, denominatorExponent, tickLength, thirtysecondNotesPerBeat uint8) smf.Message {
-	return smf.Message([]byte{0xFF, 0x58, 4, numerator, denominatorExponent, tickLength, thirtysecondNotesPerBeat})
+	return []byte{0xFF, 0x58, 4, numerator, denominatorExponent, tickLength, thirtysecondNotesPerBeat}
 }
 
 func Test_read_interpretMetaTimeSigMsg(t *testing.T) {
@@ -1257,7 +1094,7 @@ func Test_read_interpretMetaTrackNameMsg(t *testing.T) {
 }
 
 func makeNoteOffMessage(channel, note, velocity uint8) smf.Message {
-	return smf.Message([]byte{0x80 + (channel & 0x0F), note & 0x7F, velocity & 0x7F})
+	return []byte{0x80 + (channel & 0x0F), note & 0x7F, velocity & 0x7F}
 }
 
 func Test_read_interpretNoteOffMsg(t *testing.T) {
@@ -1289,7 +1126,7 @@ func Test_read_interpretNoteOffMsg(t *testing.T) {
 }
 
 func makeNoteOnMessage(channel, note, velocity uint8) smf.Message {
-	return smf.Message([]byte{0x90 + (channel & 0x0F), note & 0x7F, velocity & 0x7F})
+	return []byte{0x90 + (channel & 0x0F), note & 0x7F, velocity & 0x7F}
 }
 
 func Test_read_interpretNoteOnMsg(t *testing.T) {
@@ -1321,7 +1158,7 @@ func Test_read_interpretNoteOnMsg(t *testing.T) {
 }
 
 func makePitchBendMessage(channel uint8, value uint16) smf.Message {
-	return smf.Message([]byte{0xE0 + (channel & 0x0F), byte(value & 0x7F), byte((value / 128) & 0x7F)})
+	return []byte{0xE0 + (channel & 0x0F), byte(value & 0x7F), byte((value / 128) & 0x7F)}
 }
 
 func Test_read_interpretPitchBendMsg(t *testing.T) {
@@ -1363,7 +1200,7 @@ func Test_read_interpretPitchBendMsg(t *testing.T) {
 }
 
 func makePolyphonicAfterTouchMessage(channel, note, pressure uint8) smf.Message {
-	return smf.Message([]byte{0xA0 + (channel % 0x0F), note & 0x7F, pressure & 0x7F})
+	return []byte{0xA0 + (channel % 0x0F), note & 0x7F, pressure & 0x7F}
 }
 
 func Test_read_interpretPolyAfterTouchMsg(t *testing.T) {
@@ -1395,7 +1232,7 @@ func Test_read_interpretPolyAfterTouchMsg(t *testing.T) {
 }
 
 func makeProgramChangeMessage(channel, instrument uint8) smf.Message {
-	return smf.Message([]byte{0xC0 + (channel & 0x0F), instrument % 0x7F})
+	return []byte{0xC0 + (channel & 0x0F), instrument % 0x7F}
 }
 
 func Test_read_interpretProgramChangeMsg(t *testing.T) {
@@ -1435,7 +1272,7 @@ func makeSysExMessage(data []byte) smf.Message {
 	content := []byte{0xF0}
 	content = append(content, data...)
 	content = append(content, 0xF7)
-	return smf.Message(content)
+	return content
 }
 
 func makeBusyTrack() smf.Track {

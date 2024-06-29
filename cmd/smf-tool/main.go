@@ -19,9 +19,9 @@ var (
 	firstYear string // the year when development of this application began
 	// these are variables in order to allow unit testing to inject
 	// test-friendly functions
-	execFunc func(output.Bus, int, string, string, string, []string) int = tools.Execute
-	exitFunc func(int)                                                   = os.Exit
-	bus      output.Bus                                                  = output.NewDefaultBus(tools.ProductionLogger)
+	execFunc = tools.Execute
+	exitFunc = os.Exit
+	bus      = output.NewDefaultBus(tools.ProductionLogger)
 )
 
 func main() {

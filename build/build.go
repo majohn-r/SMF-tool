@@ -35,7 +35,7 @@ var (
 			l := fmt.Sprintf("go build -ldflags %q -o %s %s", strings.Join(flags, " "), exec, path)
 			o := &bytes.Buffer{}
 			cmd.Exec(a, l, options(o)...)
-			print(o)
+			printLine(o)
 		},
 	})
 
@@ -44,8 +44,8 @@ var (
 		Usage: "delete build products",
 		Action: func(a *goyek.A) {
 			exec, _, _ := readConfig()
-			os.Remove(filepath.Join("..", coverageFile))
-			os.Remove(filepath.Join("..", exec))
+			_ = os.Remove(filepath.Join("..", coverageFile))
+			_ = os.Remove(filepath.Join("..", exec))
 		},
 	})
 
@@ -78,7 +78,7 @@ var (
 						break
 					}
 				}
-				print(o)
+				printLine(o)
 			}
 		},
 	})
@@ -89,7 +89,7 @@ var (
 		Action: func(a *goyek.A) {
 			o := &bytes.Buffer{}
 			cmd.Exec(a, "gofmt -e -l -s -w .", options(o)...)
-			print(o)
+			printLine(o)
 		},
 	})
 
@@ -99,7 +99,7 @@ var (
 		Action: func(a *goyek.A) {
 			o := &bytes.Buffer{}
 			cmd.Exec(a, "gocritic check -enableAll ./...", options(o)...)
-			print(o)
+			printLine(o)
 		},
 	})
 
@@ -109,7 +109,7 @@ var (
 		Action: func(a *goyek.A) {
 			o := &bytes.Buffer{}
 			cmd.Exec(a, "go test -cover ./...", options(o)...)
-			print(o)
+			printLine(o)
 		},
 	})
 )
@@ -209,7 +209,7 @@ func options(b *bytes.Buffer) (o []cmd.Option) {
 	return o
 }
 
-func print(b *bytes.Buffer) {
+func printLine(b *bytes.Buffer) {
 	s := b.String()
 	if s != "" {
 		fmt.Println(s)

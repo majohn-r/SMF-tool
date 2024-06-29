@@ -1,0 +1,30 @@
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0">
+    <option name="myName" value="Project Default" />
+    <inspection_tool class="Annotator" enabled="false" level="ERROR" enabled_by_default="false">
+      <option name="highlightErrorElements" value="false" />
+      <option name="runAnnotators" value="false" />
+    </inspection_tool>
+    <inspection_tool class="GoConvertStringLiterals" enabled="true" level="INFORMATION" enabled_by_default="true" editorAttributes="INFORMATION_ATTRIBUTES" />
+    <inspection_tool class="GoExportedElementShouldHaveComment" enabled="true" level="WARNING" enabled_by_default="true" editorAttributes="WARNING_ATTRIBUTES" />
+    <inspection_tool class="GoInterfaceToAny" enabled="true" level="WARNING" enabled_by_default="true" editorAttributes="WARNING_ATTRIBUTES" />
+    <inspection_tool class="GoReservedWordUsedAsName" enabled="true" level="ERROR" enabled_by_default="true" editorAttributes="ERRORS_ATTRIBUTES" />
+    <inspection_tool class="GoShadowedVar" enabled="true" level="ERROR" enabled_by_default="true" editorAttributes="ERRORS_ATTRIBUTES" />
+    <inspection_tool class="GoTypeParameterInLowerCase" enabled="true" level="WARNING" enabled_by_default="true" editorAttributes="WARNING_ATTRIBUTES" />
+    <inspection_tool class="GoUnhandledErrorResult" enabled="true" level="WARNING" enabled_by_default="true">
+      <functions>
+        <function importPath="errors" name="Unwrap" />
+        <function importPath="math/rand" name="Read" />
+        <function importPath="fmt" name="Printf" />
+        <function importPath="fmt" name="Print" />
+        <function importPath="errors" name="New" />
+        <function importPath="fmt" name="Println" />
+        <function importPath="fmt" name="Errorf" />
+        <function importPath="errors" name="Join" />
+        <function importPath="fmt" name="Fprintf" />
+        <function importPath="fmt" name="Fprintln" />
+      </functions>
+    </inspection_tool>
+    <inspection_tool class="GoUnnecessarilyExportedIdentifiers" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
+  </profile>
+</component>
