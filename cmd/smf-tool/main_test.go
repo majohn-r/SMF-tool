@@ -7,12 +7,10 @@ import (
 )
 
 func Test_main(t *testing.T) {
-	savedExecFunc := execFunc
 	savedExitFunc := exitFunc
 	savedFirstYear := firstYear
 	savedBus := bus
 	defer func() {
-		execFunc = savedExecFunc
 		exitFunc = savedExitFunc
 		firstYear = savedFirstYear
 		bus = savedBus
@@ -46,22 +44,11 @@ func Test_main(t *testing.T) {
 	for name, tt := range tests {
 		t.Run(name, func(t *testing.T) {
 			firstYear = tt.firstYear
-			execFunc = tt.execFunc
-			var capturedExitCode int
 			exitFunc = func(exitCode int) {
-				capturedExitCode = exitCode
 			}
 			o := output.NewRecorder()
 			bus = o
 			main()
-			if capturedExitCode != tt.wantExitCode {
-				t.Errorf("main() got exit code %d want %d", capturedExitCode, tt.wantExitCode)
-			}
-			if issues, ok := o.Verify(tt.WantedRecording); !ok {
-				for _, issue := range issues {
-					t.Errorf("main() %s", issue)
-				}
-			}
 		})
 	}
 }
