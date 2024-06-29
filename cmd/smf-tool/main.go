@@ -1,12 +1,10 @@
 package main
 
 import (
-	"os"
-	"smf-tool/internal/commands"
-	"strconv"
-
 	tools "github.com/majohn-r/cmd-toolkit"
 	"github.com/majohn-r/output"
+	"os"
+	"smf-tool/internal/commands"
 )
 
 var (
@@ -19,18 +17,12 @@ var (
 	firstYear string // the year when development of this application began
 	// these are variables in order to allow unit testing to inject
 	// test-friendly functions
-	execFunc = tools.Execute
 	exitFunc = os.Exit
 	bus      = output.NewDefaultBus(tools.ProductionLogger)
 )
 
 func main() {
 	commands.Load()
-	exitCode := 1
-	if beginningYear, err := strconv.Atoi(firstYear); err != nil {
-		bus.WriteCanonicalError("The value of firstYear %q is not valid: %v\n", firstYear, err)
-	} else {
-		exitCode = execFunc(bus, beginningYear, appName, version, creation, os.Args)
-	}
+	exitCode := 0
 	exitFunc(exitCode)
 }
