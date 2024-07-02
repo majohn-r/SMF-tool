@@ -1,15 +1,11 @@
 ---
   - function: application
     value: smf-tool.exe
-  - function: path
-    value: ./cmd/smf-tool
+    name: smf-tool
+    description: Command line tool for reading/writing SMF (standard MIDI files)
   - function: timestamp
     flag: main.creation
-  - flag: main.appName
-    value: smf-tool
-  - flag: main.defaultCommand
-    value: list
-  - flag: main.firstYear
+  - function: firstYear
     value: "2023"
   - flag: main.version
     value: 0.0.1
