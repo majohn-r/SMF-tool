@@ -2,7 +2,7 @@ module smf-tool
 
 go 1.22
 
-toolchain go1.22.4
+toolchain go1.22.5
 
 require (
 	github.com/lestrrat-go/strftime v1.0.6 // indirect
@@ -17,7 +17,7 @@ require (
 )
 
 require (
-	github.com/majohn-r/cmd-toolkit v0.20.0
+	github.com/majohn-r/cmd-toolkit v0.22.0
 	github.com/majohn-r/output v0.5.3
 	gitlab.com/gomidi/midi/v2 v2.1.7
 )
