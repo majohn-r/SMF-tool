@@ -60,6 +60,14 @@ var (
 	})
 
 	_ = goyek.Define(goyek.Task{
+		Name:  "deadcode",
+		Usage: "run deadcode analysis",
+		Action: func(a *goyek.A) {
+			toolsbuild.Deadcode(a)
+		},
+	})
+
+	_ = goyek.Define(goyek.Task{
 		Name:  "doc",
 		Usage: "generate documentation",
 		Action: func(a *goyek.A) {
