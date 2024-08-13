@@ -19,3 +19,5 @@
 
 # but do not ignore build/version.txt
 !build/version.txt
+
+go.work.sum
