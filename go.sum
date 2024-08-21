@@ -11,8 +11,8 @@ github.com/lestrrat-go/strftime v1.0.6/go.mod h1:f7jQKgV5nnJpYgdEasS+/y7EsTb8ykN
 github.com/lestrrat/go-envload v0.0.0-20180220120943-6ed08b54a570/go.mod h1:BLt8L9ld7wVsvEWQbuLrUZnCMnUmLZ+CGDzKtclrTlE=
 github.com/majohn-r/cmd-toolkit v0.22.2 h1:DEo3pSBgpHCybVf1fZsJFM48YSMas8GqbIOHzI6tL6g=
 github.com/majohn-r/cmd-toolkit v0.22.2/go.mod h1:WTam0l6RYNKmv6NNVaMeLo164RAWtAhDDlYUi7Op2X4=
-github.com/majohn-r/output v0.5.3 h1:ivCEG7P+l42RFGhkizN4tbI9+k3gjJsFgBtPN5o0p6w=
-github.com/majohn-r/output v0.5.3/go.mod h1:8buO587vkhPXgN4517SRu6doheNrgpN3w28+FiA5S64=
+github.com/majohn-r/output v0.5.4 h1:fdOlKO5i3N87E0iBnAhFJFx1fHU0vzOBws3whvMS0WE=
+github.com/majohn-r/output v0.5.4/go.mod h1:KpMI5FvWOgDF8HOtGQd9+1P+u3E1U2zLKNuLyzsg42Q=
 github.com/mattn/go-isatty v0.0.20 h1:xfD0iDuEKnDkl03q4limB+vH+GxLEtL/jb4xVJSWWEY=
 github.com/mattn/go-isatty v0.0.20/go.mod h1:W+V8PltTTMOvKvAeJH7IuucS94S2C6jfK/D7dTCTo3Y=
 github.com/pkg/errors v0.8.1-0.20180311214515-816c9085562c/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
