@@ -17,7 +17,7 @@ require (
 )
 
 require (
-	github.com/majohn-r/cmd-toolkit v0.22.2
-	github.com/majohn-r/output v0.5.4
+	github.com/majohn-r/cmd-toolkit v0.22.3
+	github.com/majohn-r/output v0.8.0
 	gitlab.com/gomidi/midi/v2 v2.2.10
 )

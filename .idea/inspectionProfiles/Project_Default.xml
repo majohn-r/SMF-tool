@@ -5,6 +5,8 @@
       <option name="highlightErrorElements" value="false" />
       <option name="runAnnotators" value="false" />
     </inspection_tool>
+    <inspection_tool class="CyclicJobDependency" enabled="false" level="ERROR" enabled_by_default="false" />
+    <inspection_tool class="GithubFunctionSignatureValidation" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="GoConvertStringLiterals" enabled="true" level="INFORMATION" enabled_by_default="true" editorAttributes="INFORMATION_ATTRIBUTES" />
     <inspection_tool class="GoExportedElementShouldHaveComment" enabled="true" level="WARNING" enabled_by_default="true" editorAttributes="WARNING_ATTRIBUTES" />
     <inspection_tool class="GoInterfaceToAny" enabled="true" level="WARNING" enabled_by_default="true" editorAttributes="WARNING_ATTRIBUTES" />
@@ -26,5 +28,9 @@
       </functions>
     </inspection_tool>
     <inspection_tool class="GoUnnecessarilyExportedIdentifiers" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
+    <inspection_tool class="IllegalJobDependency" enabled="false" level="ERROR" enabled_by_default="false" />
+    <inspection_tool class="MandatoryParamsAbsent" enabled="false" level="ERROR" enabled_by_default="false" />
+    <inspection_tool class="UndefinedAction" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="UndefinedParamsPresent" enabled="false" level="WARNING" enabled_by_default="false" />
   </profile>
 </component>

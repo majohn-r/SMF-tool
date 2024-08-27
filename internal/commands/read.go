@@ -332,43 +332,43 @@ func (r *read) asVolume(velocity uint8) string {
 func (r *read) interpretAfterTouchMsg(o output.Bus, message smf.Message) {
 	var channel, pressure uint8
 	_ = message.GetAfterTouch(&channel, &pressure)
-	o.WriteConsole("AfterTouch channel %d pressure %d\n", channel, pressure)
+	o.ConsolePrintf("AfterTouch channel %d pressure %d\n", channel, pressure)
 }
 
 func (r *read) interpretControlChangeMsg(o output.Bus, message smf.Message) {
 	var channel, controller, value uint8
 	_ = message.GetControlChange(&channel, &controller, &value)
-	o.WriteConsole("ControlChange channel %d controller %d value %d\n", channel, controller, value)
+	o.ConsolePrintf("ControlChange channel %d controller %d value %d\n", channel, controller, value)
 }
 
 func (r *read) interpretMetaChannelMsg(o output.Bus, message smf.Message) {
 	var channel uint8
 	_ = message.GetMetaChannel(&channel)
-	o.WriteConsole("MetaChannel channel %d\n", channel)
+	o.ConsolePrintf("MetaChannel channel %d\n", channel)
 }
 
 func (r *read) interpretMetaCopyrightMsg(o output.Bus, message smf.Message) {
 	var text string
 	_ = message.GetMetaCopyright(&text)
-	o.WriteConsole("MetaCopyright text %q\n", text)
+	o.ConsolePrintf("MetaCopyright text %q\n", text)
 }
 
 func (r *read) interpretMetaCuepointMsg(o output.Bus, message smf.Message) {
 	var text string
 	_ = message.GetMetaCuepoint(&text)
-	o.WriteConsole("MetaCuepoint text %q\n", text)
+	o.ConsolePrintf("MetaCuepoint text %q\n", text)
 }
 
 func (r *read) interpretMetaDeviceMsg(o output.Bus, message smf.Message) {
 	var text string
 	_ = message.GetMetaDevice(&text)
-	o.WriteConsole("MetaDevice text %q\n", text)
+	o.ConsolePrintf("MetaDevice text %q\n", text)
 }
 
 func (r *read) interpretMetaInstrumentMsg(o output.Bus, message smf.Message) {
 	var text string
 	_ = message.GetMetaInstrument(&text)
-	o.WriteConsole("MetaInstrument text %q\n", text)
+	o.ConsolePrintf("MetaInstrument text %q\n", text)
 }
 
 func (r *read) interpretSMFFile(o output.Bus, data *smf.SMF) {
@@ -378,9 +378,9 @@ func (r *read) interpretSMFFile(o output.Bus, data *smf.SMF) {
 
 func (r *read) interpretSMFTimeFormat(o output.Bus, tf smf.TimeFormat) {
 	if mt, ok := tf.(smf.MetricTicks); ok {
-		o.WriteConsole("Quarter note: %d ticks\n", mt.Ticks4th())
+		o.ConsolePrintf("Quarter note: %d ticks\n", mt.Ticks4th())
 	} else {
-		o.WriteConsole("Time: %s\n", tf)
+		o.ConsolePrintf("Time: %s\n", tf)
 	}
 }
 
@@ -400,85 +400,91 @@ func (r *read) interpretMetaKeySigMsg(o output.Bus, message smf.Message) {
 		noteMap = majorKeys
 		modifier = "Major"
 	}
-	o.WriteConsole("MetaKeySig %s%s (%d %s)\n", noteMap[r.key.Key], modifier, r.key.Num, delta)
+	o.ConsolePrintf("MetaKeySig %s%s (%d %s)\n", noteMap[r.key.Key], modifier, r.key.Num, delta)
 }
 
 func (r *read) interpretMetaLyricMsg(o output.Bus, message smf.Message) {
 	var text string
 	_ = message.GetMetaLyric(&text)
-	o.WriteConsole("MetaLyric text %q\n", text)
+	o.ConsolePrintf("MetaLyric text %q\n", text)
 }
 
 func (r *read) interpretMetaMarkerMsg(o output.Bus, message smf.Message) {
 	var text string
 	_ = message.GetMetaMarker(&text)
-	o.WriteConsole("MetaMarker text %q\n", text)
+	o.ConsolePrintf("MetaMarker text %q\n", text)
 }
 
 func (r *read) interpretMetaPortMsg(o output.Bus, message smf.Message) {
 	var port uint8
 	_ = message.GetMetaPort(&port)
-	o.WriteConsole("MetaPort port %d\n", port)
+	o.ConsolePrintf("MetaPort port %d\n", port)
 }
 
 func (r *read) interpretMetaProgramNameMsg(o output.Bus, message smf.Message) {
 	var text string
 	_ = message.GetMetaProgramName(&text)
-	o.WriteConsole("MetaProgramName text %q\n", text)
+	o.ConsolePrintf("MetaProgramName text %q\n", text)
 }
 
 func (r *read) interpretMetaSMPTEOffsetMsg(o output.Bus, message smf.Message) {
 	var hour, minute, second, frame, fractFrame uint8
 	_ = message.GetMetaSMPTEOffsetMsg(&hour, &minute, &second, &frame, &fractFrame)
-	o.WriteConsole("MetaSMPTEOffset %02d:%02d:%02d frame %02d.%.02d\n", hour, minute, second, frame, fractFrame)
+	o.ConsolePrintf("MetaSMPTEOffset %02d:%02d:%02d frame %02d.%.02d\n", hour, minute, second, frame, fractFrame)
 }
 
 func (r *read) interpretMetaSeqDataMsg(o output.Bus, message smf.Message) {
 	var bt []byte
 	_ = message.GetMetaSeqData(&bt)
-	o.WriteConsole("MetaSeqData bytes %v\n", bt)
+	o.ConsolePrintf("MetaSeqData bytes %v\n", bt)
 }
 
 func (r *read) interpretMetaSeqNumberMsg(o output.Bus, message smf.Message) {
 	var sequenceNumber uint16
 	_ = message.GetMetaSeqNumber(&sequenceNumber)
-	o.WriteConsole("MetaSeqNumber sequence number %d\n", sequenceNumber)
+	o.ConsolePrintf("MetaSeqNumber sequence number %d\n", sequenceNumber)
 }
 
 func (r *read) interpretMetaTempoMsg(o output.Bus, message smf.Message) {
 	var bpm float64
 	_ = message.GetMetaTempo(&bpm)
-	o.WriteConsole("MetaTempo bpm %f\n", bpm)
+	o.ConsolePrintf("MetaTempo bpm %f\n", bpm)
 }
 
 func (r *read) interpretMetaTextMsg(o output.Bus, message smf.Message) {
 	var text string
 	_ = message.GetMetaText(&text)
-	o.WriteConsole("MetaText text %q\n", text)
+	o.ConsolePrintf("MetaText text %q\n", text)
 }
 
 func (r *read) interpretMetaTimeSigMsg(o output.Bus, message smf.Message) {
 	var numerator, denominator, clocksPerClick, demiSemiQuaverPerQuarter uint8
 	_ = message.GetMetaTimeSig(&numerator, &denominator, &clocksPerClick, &demiSemiQuaverPerQuarter)
-	o.WriteConsole("MetaTimeSig numerator %d denominator %d clocksPerClick %d demiSemiQuaverPerQuarter %d\n", numerator, denominator, clocksPerClick, demiSemiQuaverPerQuarter)
+	o.ConsolePrintf(
+		"MetaTimeSig numerator %d denominator %d clocksPerClick %d demiSemiQuaverPerQuarter %d\n",
+		numerator,
+		denominator,
+		clocksPerClick,
+		demiSemiQuaverPerQuarter,
+	)
 }
 
 func (r *read) interpretMetaTrackNameMsg(o output.Bus, message smf.Message) {
 	var text string
 	_ = message.GetMetaTrackName(&text)
-	o.WriteConsole("MetaTrackName text %q\n", text)
+	o.ConsolePrintf("MetaTrackName text %q\n", text)
 }
 
 func (r *read) interpretNoteOffMsg(o output.Bus, message smf.Message) {
 	var channel, key, velocity uint8
 	_ = message.GetNoteOff(&channel, &key, &velocity)
-	o.WriteConsole("NoteOff channel %d note %q volume %s\n", channel, r.asNote(channel, key), r.asVolume(velocity))
+	o.ConsolePrintf("NoteOff channel %d note %q volume %s\n", channel, r.asNote(channel, key), r.asVolume(velocity))
 }
 
 func (r *read) interpretNoteOnMsg(o output.Bus, message smf.Message) {
 	var channel, key, velocity uint8
 	_ = message.GetNoteOn(&channel, &key, &velocity)
-	o.WriteConsole("NoteOn channel %d note %q volume %s\n", channel, r.asNote(channel, key), r.asVolume(velocity))
+	o.ConsolePrintf("NoteOn channel %d note %q volume %s\n", channel, r.asNote(channel, key), r.asVolume(velocity))
 }
 
 func (r *read) interpretPitchBendMsg(o output.Bus, message smf.Message) {
@@ -486,13 +492,13 @@ func (r *read) interpretPitchBendMsg(o output.Bus, message smf.Message) {
 	var relative int16
 	var absolute uint16
 	_ = message.GetPitchBend(&channel, &relative, &absolute)
-	o.WriteConsole("PitchBend channel %d relative %d absolute %d\n", channel, relative, absolute)
+	o.ConsolePrintf("PitchBend channel %d relative %d absolute %d\n", channel, relative, absolute)
 }
 
 func (r *read) interpretPolyAfterTouchMsg(o output.Bus, message smf.Message) {
 	var channel, key, pressure uint8
 	_ = message.GetPolyAfterTouch(&channel, &key, &pressure)
-	o.WriteConsole("PolyAfterTouch channel %d note %s pressure %d\n", channel, r.asNote(channel, key), pressure)
+	o.ConsolePrintf("PolyAfterTouch channel %d note %s pressure %d\n", channel, r.asNote(channel, key), pressure)
 }
 
 func (r *read) asInstrument(channel, program uint8) string {
@@ -510,12 +516,12 @@ func (r *read) asInstrument(channel, program uint8) string {
 func (r *read) interpretProgramChangeMsg(o output.Bus, message smf.Message) {
 	var channel, program uint8
 	_ = message.GetProgramChange(&channel, &program)
-	o.WriteConsole("ProgramChange channel %d instrument %q\n", channel, r.asInstrument(channel, program))
+	o.ConsolePrintf("ProgramChange channel %d instrument %q\n", channel, r.asInstrument(channel, program))
 }
 
 func (r *read) interpretSMFTrack(o output.Bus, track smf.Track) {
 	for k, event := range track {
-		o.WriteConsole("%d: delta %d ", k, event.Delta)
+		o.ConsolePrintf("%d: delta %d ", k, event.Delta)
 		message := event.Message
 		switch message.Type() {
 		case midi.AfterTouchMsg:
@@ -569,18 +575,18 @@ func (r *read) interpretSMFTrack(o output.Bus, track smf.Track) {
 		case midi.SysExMsg:
 			r.interpretSysExMsg(o, message)
 		default:
-			o.WriteConsole("Unrecognized message: %q %v\n", message.Type(), message.Bytes())
+			o.ConsolePrintf("Unrecognized message: %q %v\n", message.Type(), message.Bytes())
 		}
 	}
 }
 
 func (r *read) interpretSMFTracks(o output.Bus, tracks []smf.Track) {
-	o.WriteConsole("%d tracks\n", len(tracks))
+	o.ConsolePrintf("%d tracks\n", len(tracks))
 	for k, track := range tracks {
 		if track.IsEmpty() {
-			o.WriteConsole("Track %d is empty\n", k)
+			o.ConsolePrintf("Track %d is empty\n", k)
 		} else {
-			o.WriteConsole("Track %d:\n", k)
+			o.ConsolePrintf("Track %d:\n", k)
 			r.interpretSMFTrack(o, track)
 		}
 	}
@@ -589,5 +595,5 @@ func (r *read) interpretSMFTracks(o output.Bus, tracks []smf.Track) {
 func (r *read) interpretSysExMsg(o output.Bus, message smf.Message) {
 	var bt []byte
 	_ = message.GetSysEx(&bt)
-	o.WriteConsole("SysEx bytes %v\n", bt)
+	o.ConsolePrintf("SysEx bytes %v\n", bt)
 }
